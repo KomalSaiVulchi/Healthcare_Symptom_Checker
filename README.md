@@ -3,6 +3,8 @@
 An AI-powered web app that analyzes user-reported symptoms and provides **educational insights** on possible conditions and next steps.
 Built using **Python, Streamlit, FastAPI, SQLite**, and **Google Gemini LLM**.
 
+Author: Komal Sai
+
 ---
 
 ## 🚀 Features
@@ -32,7 +34,7 @@ Built using **Python, Streamlit, FastAPI, SQLite**, and **Google Gemini LLM**.
 ### 1️⃣ Clone the repo
 
 ```bash
-git clone https://github.com/RajeshAndra/Healthcare-Symptom-Checker.git
+git clone https://github.com/komal/Healthcare-Symptom-Checker.git
 cd Healthcare-Symptom-Checker
 ```
 
@@ -62,6 +64,18 @@ uvicorn main:app --reload
 ```bash
 streamlit run Frontend/app.py
 ```
+
+---
+
+## 🎨 Frontend updates
+
+The Streamlit UI in `Frontend/app.py` was recently improved to be more compact and user-friendly:
+
+- a clean form layout with example prompts and quick tips
+- a styled result card for clearer output
+- logs are shown in a tidy table on the "Database Logs" tab
+
+If you want a different color theme or additional features (file upload, multi-turn follow-up), tell me and I can implement them.
 
 ---
 
