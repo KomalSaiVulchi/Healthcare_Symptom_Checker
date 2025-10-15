@@ -60,6 +60,7 @@ def inject_css():
         /* Make main headings red */
         h1, h2, h3, .stHeader, .stSubheader { color: #d32f2f !important; }
         .logo {font-weight:700; font-size:1.25rem}
+        .env-badge {background:#eef4ff; border:1px solid #cfe0ff; color:#1e40af; padding:6px 10px; border-radius:8px; display:inline-block; font-size:0.85rem}
         </style>
         """,
         unsafe_allow_html=True,
@@ -78,12 +79,6 @@ def sidebar_controls():
     st.sidebar.markdown("<div class='logo'>Healthcare Symptom Checker</div>", unsafe_allow_html=True)
     st.sidebar.write("For educational purposes only — not medical advice.")
     st.sidebar.markdown("---")
-    with st.sidebar.expander("Backend settings"):
-        st.caption("You can point the app at a hosted backend by setting BASE_API_URL in Streamlit secrets or environment.")
-        current = st.text_input("Base API URL", value=BASE_API_URL, help="e.g. https://your-service.onrender.com")
-        if current.rstrip("/") != BASE_API_URL:
-            st.session_state["BASE_API_URL"] = current.rstrip("/")
-            st.rerun()
     st.sidebar.header("Quick examples")
     examples = {
         "Sore throat": "sore throat, mild fever for 2 days",
@@ -249,6 +244,7 @@ def render_main(preset, user_id, show_confidence, auto_fetch_logs):
 def main():
     init_page()
     inject_css()
+    st.markdown(f"<div class='env-badge'>Backend: {BASE_API_URL}</div>", unsafe_allow_html=True)
     preset, user_id, show_confidence, auto_fetch_logs = sidebar_controls()
     render_main(preset, user_id, show_confidence, auto_fetch_logs)
     if auto_fetch_logs:
