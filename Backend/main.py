@@ -1,12 +1,24 @@
 # backend/main.py
+import os
 import sqlite3
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from .llm_client import generate_diagnosis
 from .db import init_db, save_query, get_history
-import os
 
 app = FastAPI(title="Healthcare Symptom Checker API")
+
+# CORS setup: allow configured origins or all (*) by default
+cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+cors_origins = [o.strip() for o in cors_origins if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"] if cors_origins == ["*"] else cors_origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 init_db()
 
 class Request(BaseModel):
@@ -31,4 +43,17 @@ def get_logs():
     conn.close()
 
     return {"logs": [{"id": r[0], "symptom": r[1], "response": r[2], "created_at": r[3]} for r in rows]}
+
+
+class Feedback(BaseModel):
+    time: str | None = None
+    rating: int | None = None
+    feedback: str | None = None
+    result: str | None = None
+
+
+@app.post("/api/feedback", status_code=201)
+def submit_feedback(_: Feedback):
+    # Minimal endpoint so the frontend can submit; extend to persist if needed
+    return {"status": "ok"}
 

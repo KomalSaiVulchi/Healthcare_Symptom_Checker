@@ -6,9 +6,20 @@ from datetime import datetime
 import requests
 import streamlit as st
 
-API_URL = os.getenv("API_URL", "http://localhost:8000/api/diagnose")
-LOGS_URL = os.getenv("LOGS_URL", "http://localhost:8000/api/logs")
-FEEDBACK_URL = os.getenv("FEEDBACK_URL", "http://localhost:8000/api/feedback")
+# Resolve backend URLs from Streamlit secrets (preferred), env vars, or localhost
+def _get_base_url() -> str:
+    base = None
+    try:
+        base = st.secrets.get("BASE_API_URL")  # e.g. https://your-render.onrender.com
+    except Exception:
+        base = None
+    base = base or os.getenv("BASE_API_URL")
+    return base or "http://localhost:8000"
+
+BASE_API_URL = _get_base_url().rstrip("/")
+API_URL = os.getenv("API_URL") or f"{BASE_API_URL}/api/diagnose"
+LOGS_URL = os.getenv("LOGS_URL") or f"{BASE_API_URL}/api/logs"
+FEEDBACK_URL = os.getenv("FEEDBACK_URL") or f"{BASE_API_URL}/api/feedback"
 LOCAL_FEEDBACK_PATH = os.path.join(os.path.dirname(__file__), "feedback_offline.jsonl")
 
 # Page setup
@@ -26,9 +37,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-API_URL = os.getenv("API_URL", "http://localhost:8000/api/diagnose")
-LOGS_URL = os.getenv("LOGS_URL", "http://localhost:8000/api/logs")
-FEEDBACK_URL = os.getenv("FEEDBACK_URL", "http://localhost:8000/api/feedback")
+BASE_API_URL = _get_base_url().rstrip("/")
+API_URL = os.getenv("API_URL") or f"{BASE_API_URL}/api/diagnose"
+LOGS_URL = os.getenv("LOGS_URL") or f"{BASE_API_URL}/api/logs"
+FEEDBACK_URL = os.getenv("FEEDBACK_URL") or f"{BASE_API_URL}/api/feedback"
 LOCAL_FEEDBACK_PATH = os.path.join(os.path.dirname(__file__), "feedback_offline.jsonl")
 
 
@@ -66,6 +78,12 @@ def sidebar_controls():
     st.sidebar.markdown("<div class='logo'>Healthcare Symptom Checker</div>", unsafe_allow_html=True)
     st.sidebar.write("For educational purposes only — not medical advice.")
     st.sidebar.markdown("---")
+    with st.sidebar.expander("Backend settings"):
+        st.caption("You can point the app at a hosted backend by setting BASE_API_URL in Streamlit secrets or environment.")
+        current = st.text_input("Base API URL", value=BASE_API_URL, help="e.g. https://your-service.onrender.com")
+        if current.rstrip("/") != BASE_API_URL:
+            st.session_state["BASE_API_URL"] = current.rstrip("/")
+            st.rerun()
     st.sidebar.header("Quick examples")
     examples = {
         "Sore throat": "sore throat, mild fever for 2 days",
