@@ -1,9 +1,12 @@
 
 import os
+from pathlib import Path
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env located alongside this file, regardless of the current working directory
+_DOTENV_PATH = Path(__file__).with_name('.env')
+load_dotenv(dotenv_path=_DOTENV_PATH if _DOTENV_PATH.exists() else None)
 API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 if not API_KEY:
