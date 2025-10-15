@@ -2,8 +2,8 @@
 import sqlite3
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from llm_client import generate_diagnosis
-from db import init_db, save_query, get_history
+from .llm_client import generate_diagnosis
+from .db import init_db, save_query, get_history
 import os
 
 app = FastAPI(title="Healthcare Symptom Checker API")

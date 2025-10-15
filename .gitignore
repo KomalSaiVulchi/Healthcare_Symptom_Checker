@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+backend_uvicorn.log
+backend_uvicorn.err
+streamlit_stdout.log
+streamlit_stderr.log
+symptom_history.db
+.env
+.DS_Store

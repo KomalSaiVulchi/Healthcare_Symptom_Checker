@@ -4,12 +4,13 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
+API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 if not API_KEY:
-    raise EnvironmentError("❌ Missing GEMINI_API_KEY in .env file or environment variables.")
-
-genai.configure(api_key=API_KEY)
+    # Don't raise here; allow the app to start but return a helpful error when the model is used
+    print("WARNING: Missing GEMINI_API_KEY/GOOGLE_API_KEY in environment. LLM calls will fail until configured.")
+else:
+    genai.configure(api_key=API_KEY)
 
 GENERATION_CONFIG = {
     "temperature": 0.7,
@@ -33,15 +34,15 @@ model = genai.GenerativeModel(
 def generate_diagnosis(symptom_text: str) -> str:
 
     if not symptom_text or not symptom_text.strip():
-        return "⚠️ Please provide a valid symptom description."
+        return "Please provide a valid symptom description."
 
     try:
         response = model.generate_content(
             [f"Symptoms: {symptom_text}\n\nSuggest probable conditions and next steps."]
         )
-        return response.text.strip() if response and response.text else "⚠️ No response generated."
+        return response.text.strip() if response and response.text else "No response generated."
     except Exception as e:
-        return f"❌ An error occurred while processing your request: {str(e)}"
+        return f"An error occurred while processing your request: {str(e)}"
 
 
 if __name__ == "__main__":
