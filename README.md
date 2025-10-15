@@ -3,7 +3,7 @@
 An AI-powered web app that analyzes user-reported symptoms and provides **educational insights** on possible conditions and next steps.
 Built using **Python, Streamlit, FastAPI, SQLite**, and **Google Gemini LLM**.
 
-Author: Komal Sai
+Author: komal 
 
 ---
 
@@ -34,8 +34,8 @@ Author: Komal Sai
 ### 1️⃣ Clone the repo
 
 ```bash
-git clone https://github.com/komal/Healthcare-Symptom-Checker.git
-cd Healthcare-Symptom-Checker
+git clone https://github.com/KomalSaiVulchi/Healthcare_Symptom_Checker.git
+cd Healthcare_Symptom_Checker
 ```
 
 ### 2️⃣ Install dependencies
@@ -99,4 +99,27 @@ If you want a different color theme or additional features (file upload, multi-t
 * Possible conditions: Common cold, mild viral infection
 * Recommendations: Rest, hydrate, consult doctor if worsens
 * Disclaimer: *Educational purpose only — not medical advice.*
+
+
+---
+
+## 📦 Deployment
+
+Quick Render deployment (backend)
+
+- This repository includes a `Procfile` and `render.yaml` to help deploy the backend to Render.
+- Required environment variables (configure these in your Render dashboard):
+	- `GEMINI_API_KEY` — your Google/Gemini API key (do NOT commit this to the repo).
+
+Steps:
+
+1. Create an account at https://render.com and link your GitHub repository.
+2. Render will detect `render.yaml` and create a web service named `healthcare-backend`.
+3. In the Render dashboard, add the environment variable `GEMINI_API_KEY` with your key.
+4. Deploy — Render will run `pip install -r requirements.txt` and start uvicorn per the `render.yaml`.
+
+Notes:
+
+- SQLite is file-based. For persistent storage across restarts or multiple instances, migrate to a managed DB (e.g., Postgres) and update `Backend/db.py`.
+- Keep API keys and secrets in the platform environment variables — never commit them.
 
